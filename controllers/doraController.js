@@ -25,7 +25,7 @@ const getAPost = async (req, res) => {
     try {
         // check if the id is valid
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({error: 'No such ID'})
+            return res.status(400).json({ error: 'No such ID' })
         }
         // get the post
         const getADora = await Dora.findById(id);
@@ -43,12 +43,12 @@ const getAPost = async (req, res) => {
 // create a post
 // create a post
 const createAPost = async (req, res) => {
-    try { 
+    try {
         // input fields
-        const { title, prompt, video, thumbnail, creator  } = req.body;
+        const { title, prompt, video, thumbnail, creator } = req.body;
         const { name, email, avatar } = creator; // Destructure username and avatar from creator object
         // initialization
-        const createPost = await Dora.create({ title, prompt, video, thumbnail,  creator: { name, email, avatar } });
+        const createPost = await Dora.create({ title, prompt, video, thumbnail, creator: { name, email, avatar } });
         //  check if the post is valid
         if (!createPost) {
             return res.status(400).json({ error: 'Failed to create post. Please try again.' });
@@ -56,8 +56,14 @@ const createAPost = async (req, res) => {
         // send response
         return res.status(200).json(createPost);
     } catch (error) {
-        console.log("Error creating post:", error.message);
-        return res.status(400).json({ error: 'Internal server error. Please try again later.' });
+        console.error("Error Creating Post:", error.message);
+        let errorMessage = '';
+        if (error.errors) {
+            errorMessage = Object.values(error.errors).map(error => error.message).join(', ');
+        } else {
+            errorMessage = error.message;
+        }
+        res.status(500).json({ message: errorMessage });
     }
 }
 
@@ -90,7 +96,7 @@ const updateAPost = async (req, res) => {
         const { id } = req.params;
         // check if the id is valid
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({error: 'No such ID'})
+            return res.status(400).json({ error: 'No such ID' })
         }
         const updatePost = await Dora.findByIdAndUpdate({ id: _id }, { ...req.body }, { new: true })
         if (!updatePost) {
