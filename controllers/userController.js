@@ -57,40 +57,50 @@ const createToken = (id) => {
 
 
 // };
-
 const signUp = async (req, res) => {
   const { name, email, password, avatar } = req.body;
   try {
-      // Check if the user already exists
-      let user = await User.findOne({ email });
-      if (user) {
-          return res.status(400).json({ message: 'User already exists' });
+    // Check if the user already exists
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+    // Create new user
+    user = new User({ name, email, password, avatar });
+    await user.save();
+
+    // Generate JWT token
+    const payload = {
+      user: {
+        id: user._id
       }
-      // Create new user
-      user = new User({ name, email, password, avatar });
-      await user.save();
+    };
 
-      // Generate JWT token
-      const payload = {
-          user: {
-              id: user._id
-          }
-      };
-
-      jwt.sign(
-          payload,
-          process.env.JWT_SECRET,
-          { expiresIn: maxAgeExpiredIn },
-          (err, token) => {
-              if (err) throw err;
-              res.status(201).json({ token });
-          }
-      );
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: maxAgeExpiredIn * 100 },
+      (err, token) => {
+        if (err) {
+          console.error("JWT Error:", err);
+          return res.status(500).json({ message: "Failed to generate JWT token" });
+        }
+        res.status(201).json({ token });
+      }
+    );
   } catch (error) {
-      console.error(error.message);
-      res.status(500).send('Server Error');
+    console.error("Signup Error:", error.message);
+    let errorMessage = '';
+    if (error.errors) {
+      errorMessage = Object.values(error.errors).map(error => error.message).join(', ');
+    } else {
+      errorMessage = error.message;
+    }
+    res.status(500).json({ message: errorMessage });
   }
 };
+
+
 
 // login controller
 const logUserIn = async (req, res) => {
