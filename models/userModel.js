@@ -26,8 +26,8 @@ const userSchema = new Schema({
     },
     avatar: {
         type: String,
-        required: [true, 'Please enter your email'],
-    },
+        required: [true, 'Please Select Your Avatar'],
+    }, 
     password: {
         type: String,
         required: [true, 'Please enter your password'],
@@ -36,7 +36,7 @@ const userSchema = new Schema({
                 validator: function (value) {
                     return /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(value);
                 },
-                message: 'Password must contain at least 8 characters, including at least one number, one symbol, and one uppercase letter'
+                message: 'Password must contain at least 8 characters & including at least one number & one symbol & and one uppercase letter'
             }
         ],
 
