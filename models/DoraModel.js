@@ -5,22 +5,18 @@ const Schema = mongoose.Schema;
 const doraSchema = new Schema({
     title: {
         type: String,
-        required: [true, 'Post title is required'],
-        trim: true,
-        minlength: 3
+        required: [true, 'Post title is required'], 
     },
     prompt: {
-        type: String,
-        trim: true,
-        minlength: 9
+        type: String, 
     },
     video: {
         type: String,
-        required: [true, 'Make sure to select the Vid'],
+        required: [true, 'Make sure to select your Video'],
     },
     thumbnail: {
         type: String,
-        required: [true, 'Make sure to select the thumbnail'],
+        required: [true, 'Make sure to select your thumbnail'],
     },
     creator: {
         email: {
