@@ -13,10 +13,10 @@ app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
 
-
+ 
 
 // routes
-app.get('*', checkUser);
+// app.get('*', checkUser);
 app.use('/api/dora', doraRoutes); // http://localhost:4000/api/dora/
 app.use('/api/auth', userRoutes); // http://localhost:4000/api/auth/
 // connect to mongodb
