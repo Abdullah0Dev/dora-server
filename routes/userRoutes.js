@@ -18,6 +18,7 @@ router.post('/login', logUserIn);
 router.get('/logout', logout);
 
 // Get user
-router.get('/user', requireAuth , getUser);
+router.get('/user' , getUser);
 
 module.exports = router;
+ 
